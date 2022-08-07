@@ -48,6 +48,8 @@ require("packer").startup(function(use)
 		},
 	})
 
+	use("simrat39/rust-tools.nvim")
+
 	use("navarasu/onedark.nvim") -- Theme inspired by Atom's One
 	use("nvim-treesitter/nvim-treesitter")
 	use("tpope/vim-commentary")

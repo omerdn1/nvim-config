@@ -5,7 +5,7 @@ local servers = {
 	"gopls",
 	"html",
 	"pyright",
-	"rust_analyzer",
+	-- "rust_analyzer", -- It's being initialized by rust-tools
 	"sumneko_lua",
 	"tailwindcss",
 	"tsserver",
@@ -44,6 +44,12 @@ for _, lsp in ipairs(servers) do
 		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 	})
 end
+
+-- Dedicated rust-tools rust_analyzer init
+require("rust-tools").setup({
+	server = { on_attach = on_attach },
+	tools = { inlay_hints = { show_variable_name = true } },
+})
 
 vim.g.completeopt = "menu,menuone,noselect,noinsert"
 

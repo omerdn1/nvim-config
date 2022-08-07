@@ -17,12 +17,50 @@ vim.keymap.set("t", "<Leader><Esc>", "<C-\\><C-n>", { silent = true })
 vim.keymap.set("n", "<Leader>v", ":edit ~/.config/nvim/init.lua<CR>", { silent = true })
 
 vim.keymap.set("n", "<Leader>n", require("telescope").extensions.file_browser.file_browser)
-vim.keymap.set("n", "<Leader>f", require("telescope.builtin").find_files)
+vim.keymap.set("n", "<Leader>p", require("telescope.builtin").find_files)
 vim.keymap.set("n", "<Leader>t", require("telescope.builtin").treesitter)
+
+vim.keymap.set("n", "<Leader>f", function(path)
+	require("telescope.builtin").live_grep({ search_dirs = { path or vim.fn.input("Dir: ", "./", "dir") } })
+end)
 
 vim.keymap.set({ "n", "v" }, "<Leader>c", ":Commentary<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader>g", ":FloatermNew lazygit<CR>")
+
+-- Terminal management
+_G.term_buf_of_tab = _G.term_buf_of_tab or {}
+_G.term_buf_max_nmb = _G.term_buf_max_nmb or 0
+
+function spawn_terminal()
+	local cur_tab = vim.api.nvim_get_current_tabpage()
+	vim.cmd("vs | terminal")
+	local cur_buf = vim.api.nvim_get_current_buf()
+	_G.term_buf_max_nmb = _G.term_buf_max_nmb + 1
+	vim.api.nvim_buf_set_name(cur_buf, "Terminal " .. _G.term_buf_max_nmb)
+	table.insert(_G.term_buf_of_tab, cur_tab, cur_buf)
+	vim.cmd(":startinsert")
+end
+
+function toggle_terminal()
+	local cur_tab = vim.api.nvim_get_current_tabpage()
+	local term_buf = term_buf_of_tab[cur_tab]
+	if term_buf ~= nil then
+		local cur_buf = vim.api.nvim_get_current_buf()
+		if cur_buf == term_buf then
+			vim.cmd("q")
+		else
+			vim.cmd("vert sb" .. term_buf)
+			vim.cmd(":startinsert")
+		end
+	else
+		spawn_terminal()
+		vim.cmd(":startinsert")
+	end
+end
+vim.keymap.set("n", "<c-`>", toggle_terminal)
+vim.keymap.set("i", "<c-`>", "<ESC>:lua toggle_terminal()<CR>")
+vim.keymap.set("t", "<c-`>", "<c-\\><c-n>:lua toggle_terminal()<CR>")
 
 -- Test, Build and Run keybindings for different languages
 -- Test = <Leader>-t

@@ -31,6 +31,14 @@ require("packer").startup(function(use)
 	use("lewis6991/gitsigns.nvim")
 	-- Terminal Management
 	use("voldikss/vim-floaterm")
+	-- UI
+	use({
+		"nvim-lualine/lualine.nvim",
+		requires = { "kyazdani42/nvim-web-devicons", opt = true },
+		config = { require("lualine").setup({
+			options = { theme = "gruvbox" },
+		}) },
+	})
 
 	use("navarasu/onedark.nvim") -- Theme inspired by Atom's One
 	use("nvim-treesitter/nvim-treesitter")

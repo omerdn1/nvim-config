@@ -33,7 +33,7 @@ _G.term_buf_max_nmb = _G.term_buf_max_nmb or 0
 
 function spawn_terminal()
 	local cur_tab = vim.api.nvim_get_current_tabpage()
-	vim.cmd("vs | terminal")
+	vim.cmd("split | terminal")
 	local cur_buf = vim.api.nvim_get_current_buf()
 	_G.term_buf_max_nmb = _G.term_buf_max_nmb + 1
 	vim.api.nvim_buf_set_name(cur_buf, "Terminal " .. _G.term_buf_max_nmb)
@@ -49,7 +49,7 @@ function toggle_terminal()
 		if cur_buf == term_buf then
 			vim.cmd("q")
 		else
-			vim.cmd("vert sb" .. term_buf)
+			vim.cmd("sb" .. term_buf) -- "vert sb" for vsplit
 			vim.cmd(":startinsert")
 		end
 	else

@@ -19,7 +19,7 @@ require("packer").startup(function(use)
 
 	--- LSP
 	use("neovim/nvim-lspconfig") -- Configurations for Nvim LSP
-	use("williamboman/nvim-lsp-installer") -- LSP Server Installer
+	use({ "williamboman/nvim-lsp-installer", config = { require("nvim-lsp-installer").setup({}) } }) -- LSP Server Installer
 	use("jose-elias-alvarez/null-ls.nvim")
 	-- CMP Plugins
 	use("hrsh7th/cmp-nvim-lsp")
@@ -35,9 +35,17 @@ require("packer").startup(function(use)
 	use({
 		"nvim-lualine/lualine.nvim",
 		requires = { "kyazdani42/nvim-web-devicons", opt = true },
-		config = { require("lualine").setup({
-			options = { theme = "gruvbox" },
-		}) },
+		config = {
+			require("lualine").setup({
+				options = {
+					theme = "gruvbox",
+					icons_enabled = true,
+				},
+				tabline = {
+					lualine_a = { "buffers" },
+				},
+			}),
+		},
 	})
 
 	use("navarasu/onedark.nvim") -- Theme inspired by Atom's One
@@ -50,6 +58,12 @@ require("packer").startup(function(use)
 		requires = { { "nvim-lua/plenary.nvim" } },
 	})
 	use("nvim-telescope/telescope-file-browser.nvim")
+	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	})
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins

@@ -12,7 +12,6 @@ vim.keymap.set("n", "<Leader>/", ":nohlsearch<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>y", ":%y<CR>")
 vim.keymap.set("n", "k", "gk", { silent = true })
 vim.keymap.set("n", "j", "gj", { silent = true })
-vim.keymap.set("n", "<Leader>l", ":vsplit term://fish <CR>", { silent = true })
 vim.keymap.set("t", "<Leader><Esc>", "<C-\\><C-n>", { silent = true })
 vim.keymap.set("n", "<Leader>v", ":edit ~/.config/nvim/init.lua<CR>", { silent = true })
 

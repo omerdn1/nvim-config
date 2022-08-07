@@ -10,51 +10,40 @@ local servers = {
 	"tailwindcss",
 	"tsserver",
 }
+
 local has_formatter = { "gopls", "html", "rust_analyzer", "sumneko_lua", "tsserver" }
-for _, name in pairs(servers) do
-	local found, server = require("nvim-lsp-installer").get_server(name)
-	if found and not server:is_installed() then
-		print("Installing " .. name)
-		server:install()
+
+local on_attach = function(client, bufnr)
+	-- Enable completion triggered by <c-x><c-o>
+	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+	vim.diagnostic.config({
+		update_in_insert = true,
+	})
+
+	local opts = { buffer = bufnr }
+	vim.keymap.set("n", "<Leader>h", vim.lsp.buf.hover, opts)
+	vim.keymap.set("n", "<Leader>i", vim.lsp.buf.definition, opts)
+	vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename, opts)
+
+	for _, value in pairs(has_formatter) do
+		if client.name == value then
+			should_format = false
+		end
+	end
+	if not should_format then
+		client.resolved_capabilities.document_formatting = false
 	end
 end
-local setup_server = {
-	sumneko_lua = function(opts)
-		opts.settings = { Lua = { diagnostics = { globals = { "vim" } } } }
-	end,
-}
-require("nvim-lsp-installer").on_server_ready(function(server)
-	local opts = {
-		on_attach = function(client, bufnr)
-			vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-			vim.diagnostic.config({
-				virtual_text = true,
-				signs = true,
-				underline = true,
-				update_in_insert = true,
-				severity_sort = false,
-			})
-			local opts = { buffer = bufnr }
-			vim.keymap.set("n", "<Leader>h", vim.lsp.buf.hover, opts)
-			vim.keymap.set("n", "<Leader>d", vim.lsp.buf.definition, opts)
-			vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename, opts)
-			local should_format = true
-			for _, value in pairs(has_formatter) do
-				if client.name == value then
-					should_format = false
-				end
-			end
-			if not should_format then
-				client.resolved_capabilities.document_formatting = false
-			end
-		end,
+
+local nvim_lsp = require("lspconfig")
+for _, lsp in ipairs(servers) do
+	nvim_lsp[lsp].setup({
+		on_attach = on_attach,
 		capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
-	}
-	if setup_server[server.name] then
-		setup_server[server.name](opts)
-	end
-	server:setup(opts)
-end)
+		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+	})
+end
 
 vim.g.completeopt = "menu,menuone,noselect,noinsert"
 

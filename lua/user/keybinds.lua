@@ -23,6 +23,8 @@ vim.keymap.set("n", "<Leader>f", function(path)
 	require("telescope.builtin").live_grep({ search_dirs = { path or vim.fn.input("Dir: ", "./", "dir") } })
 end)
 
+-- Inverse tab with Shift-Tab
+vim.keymap.set("i", "<S-Tab>", "<C-d>")
 vim.keymap.set({ "n", "v" }, "<Leader>c", ":Commentary<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader>g", ":FloatermNew lazygit<CR>")

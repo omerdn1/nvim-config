@@ -21,12 +21,29 @@ require("packer").startup(function(use)
 	use("neovim/nvim-lspconfig") -- Configurations for Nvim LSP
 	use({ "williamboman/nvim-lsp-installer", config = { require("nvim-lsp-installer").setup({}) } }) -- LSP Server Installer
 	use("jose-elias-alvarez/null-ls.nvim")
+	use({
+		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+		config = function()
+			require("lsp_lines").setup()
+		end,
+	})
 	-- CMP Plugins
 	use("hrsh7th/cmp-nvim-lsp")
 	use("hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-cmdline")
 	use("hrsh7th/cmp-vsnip")
 	use("hrsh7th/vim-vsnip")
+	-- Vim Enhancements
+	use("mg979/vim-visual-multi")
+	use("lukas-reineke/indent-blankline.nvim")
+	use({ "ggandor/leap.nvim", config = { require("leap").set_default_keymaps() } })
+	-- Keybindings
+	use({
+		"folke/which-key.nvim",
+		config = function()
+			require("which-key").setup({})
+		end,
+	})
 	-- Git
 	use("lewis6991/gitsigns.nvim")
 	-- Terminal Management
@@ -50,7 +67,7 @@ require("packer").startup(function(use)
 
 	use("simrat39/rust-tools.nvim")
 
-	use("navarasu/onedark.nvim") -- Theme inspired by Atom's One
+	use("sainnhe/edge")
 	use("nvim-treesitter/nvim-treesitter")
 	use("tpope/vim-commentary")
 	use({
@@ -60,6 +77,7 @@ require("packer").startup(function(use)
 		requires = { { "nvim-lua/plenary.nvim" } },
 	})
 	use("nvim-telescope/telescope-file-browser.nvim")
+	use({ "stevearc/dressing.nvim" })
 	use({
 		"windwp/nvim-autopairs",
 		config = function()
@@ -74,10 +92,13 @@ require("packer").startup(function(use)
 	end
 end)
 
-require("onedark").setup({
-	style = "deep",
-})
-vim.cmd([[ colorscheme onedark ]])
+-- vim.cmd([[ colorscheme onedark ]])
+--
+
+-- let g:edge_style = 'aura'
+-- vim.g.edge_style = "neon"
+-- vim.g.edge_diagnostic_virtual_text = "colored"
+-- vim.cmd([[ colorscheme edge ]])
 
 require("gitsigns").setup()
 
@@ -91,6 +112,21 @@ require("telescope").setup({
 	extensions = { file_browser = { hidden = true } },
 })
 require("telescope").load_extension("file_browser")
+-- require("dressing").setup({
+-- 	select = {
+-- 		get_config = function(opts)
+-- 			if opts.kind == "codeaction" then
+-- 				return {
+-- 					backend = "nui",
+-- 					nui = {
+-- 						relative = "cursor",
+-- 						max_width = 40,
+-- 					},
+-- 				}
+-- 			end
+-- 		end,
+-- 	},
+-- })
 
 require("nvim-treesitter.configs").setup({
 	ensure_installed = {

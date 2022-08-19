@@ -11,9 +11,10 @@ local servers = {
 	"tsserver",
 }
 
-local has_formatter = { "gopls", "html", "rust_analyzer", "sumneko_lua" }
+local has_formatter = { "gopls", "rust_analyzer", "sumneko_lua" }
 
 local on_attach = function(client, bufnr)
+	local should_format = true
 	-- Enable completion triggered by <c-x><c-o>
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
@@ -88,12 +89,6 @@ cmp.setup({
 	sources = { { name = "nvim_lsp" }, { name = "vsnip" } },
 })
 
--- Autoformat on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-	command = "lua vim.lsp.buf.format()",
-	pattern = "*.cpp,*.css,*.go,*.h,*.html,*.js,*.json,*.jsx,*.lua,*.md,*.py,*.rs,*.ts,*.tsx,*.yaml",
-})
-
 local null_ls = require("null-ls")
 null_ls.setup({
 	sources = {
@@ -105,4 +100,10 @@ null_ls.setup({
 		null_ls.builtins.formatting.rustfmt,
 		null_ls.builtins.formatting.stylua,
 	},
+})
+
+-- Autoformat on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+	command = "lua vim.lsp.buf.format()",
+	pattern = "*.cpp,*.css,*.go,*.h,*.html,*.js,*.json,*.jsx,*.lua,*.md,*.py,*.ts,*.tsx,*.yaml", -- Removed *.rs to hopefully reduce performance issues
 })

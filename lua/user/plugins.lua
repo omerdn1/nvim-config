@@ -35,7 +35,13 @@ require("packer").startup(function(use)
 	use("hrsh7th/vim-vsnip")
 	-- Vim Enhancements
 	use("mg979/vim-visual-multi")
-	use("lukas-reineke/indent-blankline.nvim")
+	use({
+		"lukas-reineke/indent-blankline.nvim",
+		config = function()
+			vim.g.indent_blankline_show_first_indent_level = false
+			vim.g.indent_blankline_show_trailing_blankline_indent = false
+		end,
+	})
 	use({ "ggandor/leap.nvim", config = { require("leap").set_default_keymaps() } })
 	-- Keybindings
 	use({
@@ -47,7 +53,26 @@ require("packer").startup(function(use)
 	-- Git
 	use("lewis6991/gitsigns.nvim")
 	-- Terminal Management
-	use("voldikss/vim-floaterm")
+	-- use("voldikss/vim-floaterm")
+	use({
+		"akinsho/toggleterm.nvim",
+		tag = "v2.*",
+		config = function()
+			require("toggleterm").setup({
+				open_mapping = [[<c-`>]],
+			})
+		end,
+	})
+	-- Session Management
+	use({
+		"rmagatti/auto-session",
+		config = function()
+			require("auto-session").setup({
+				log_level = "error",
+				auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+			})
+		end,
+	})
 	-- UI
 	use({
 		"nvim-lualine/lualine.nvim",
@@ -84,7 +109,15 @@ require("packer").startup(function(use)
 			require("nvim-autopairs").setup({})
 		end,
 	})
-
+	use({ "windwp/nvim-ts-autotag" })
+	use({
+		"kylechui/nvim-surround",
+		config = function()
+			require("nvim-surround").setup({})
+		end,
+	})
+	use("p00f/nvim-ts-rainbow")
+	use("zefei/vim-colortuner")
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
 	if packer_bootstrap then
@@ -112,21 +145,6 @@ require("telescope").setup({
 	extensions = { file_browser = { hidden = true } },
 })
 require("telescope").load_extension("file_browser")
--- require("dressing").setup({
--- 	select = {
--- 		get_config = function(opts)
--- 			if opts.kind == "codeaction" then
--- 				return {
--- 					backend = "nui",
--- 					nui = {
--- 						relative = "cursor",
--- 						max_width = 40,
--- 					},
--- 				}
--- 			end
--- 		end,
--- 	},
--- })
 
 require("nvim-treesitter.configs").setup({
 	ensure_installed = {
@@ -144,4 +162,6 @@ require("nvim-treesitter.configs").setup({
 		"yaml",
 	},
 	highlight = { enable = true },
+	autotag = { enable = true },
+	rainbow = { enable = true, extended_mode = true },
 })

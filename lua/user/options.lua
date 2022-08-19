@@ -35,6 +35,7 @@ local options = {
 	wrap = true, -- display lines as one long line
 	scrolloff = 8, -- is one of my fav
 	sidescrolloff = 8,
+	guicursor = "a:blinkwait5-blinkon5-blinkoff5", -- Set blinking cursor
 	-- guifont = "monospace:h17",               -- the font used in graphical neovim applications
 }
 

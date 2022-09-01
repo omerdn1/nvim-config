@@ -25,6 +25,7 @@ end)
 
 -- Inverse tab with Shift-Tab
 vim.keymap.set("i", "<S-Tab>", "<C-d>")
+
 vim.keymap.set({ "n", "v" }, "<Leader>c", ":Commentary<CR>", { silent = true })
 
 local Terminal = require("toggleterm.terminal").Terminal

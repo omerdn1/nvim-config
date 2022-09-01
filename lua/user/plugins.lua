@@ -83,11 +83,19 @@ require("packer").startup(function(use)
 					theme = "gruvbox",
 					icons_enabled = true,
 				},
-				tabline = {
-					lualine_a = { "buffers" },
+				sections = {
+					lualine_c = { { "filename", path = 1 } },
 				},
+				-- tabline = {
+				-- 	lualine_a = { "buffers" },
+				-- },
 			}),
 		},
+	})
+	use({
+		"akinsho/bufferline.nvim",
+		tag = "v2.*",
+		requires = "kyazdani42/nvim-web-devicons",
 	})
 
 	use("simrat39/rust-tools.nvim")
@@ -132,6 +140,12 @@ end)
 -- vim.g.edge_style = "neon"
 -- vim.g.edge_diagnostic_virtual_text = "colored"
 -- vim.cmd([[ colorscheme edge ]])
+
+require("bufferline").setup({
+	options = {
+		sort_by = "insert_after_current",
+	},
+})
 
 require("gitsigns").setup()
 

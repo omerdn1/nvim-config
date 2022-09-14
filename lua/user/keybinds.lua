@@ -5,24 +5,36 @@ vim.keymap.set("n", "<Leader>w", "<C-w>k")
 vim.keymap.set("n", "<Leader>a", "<C-w>h")
 vim.keymap.set("n", "<Leader>s", "<C-w>j")
 vim.keymap.set("n", "<Leader>d", "<C-w>l")
-vim.keymap.set("n", "<Leader>k", ":bprevious<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>j", ":bnext<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>q", ":bprevious<CR>:bdelete #<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>k", ":bprevious<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>j", ":bnext<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>q", ":bprevious<CR>:bdelete #<CR>", { silent = true })
+-- With Bufferline sorting
+vim.keymap.set("n", "<Leader>k", ":BufferLineCyclePrev<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>j", ":BufferLineCycleNext<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>q", ":BufferLineCyclePrev<CR>:bdelete #<CR>", { silent = true })
+
 vim.keymap.set("n", "<Leader>/", ":nohlsearch<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>y", ":%y<CR>")
 vim.keymap.set("n", "k", "gk", { silent = true })
 vim.keymap.set("n", "j", "gj", { silent = true })
 vim.keymap.set("t", "<Leader><Esc>", "<C-\\><C-n>", { silent = true })
 vim.keymap.set("n", "<Leader>v", ":edit ~/.config/nvim/init.lua<CR>", { silent = true })
+-- Clear search results with ESC
+vim.keymap.set("n", "<ESC>", ":noh<CR>", { silent = true })
 
 vim.keymap.set("n", "<Leader>n", require("telescope").extensions.file_browser.file_browser)
 vim.keymap.set("n", "<Leader>p", require("telescope.builtin").find_files)
 vim.keymap.set("n", "<Leader>t", require("telescope.builtin").treesitter)
 
+vim.keymap.set("n", "<C-w>", ":bd<CR>", { silent = true })
+
 vim.keymap.set("n", "<Leader>f", function(path)
 	require("telescope.builtin").live_grep({ search_dirs = { path or vim.fn.input("Dir: ", "./", "dir") } })
 end)
 
+-- Tabbing in visual selection mode
+vim.keymap.set("v", "<Tab>", ">gv", { silent = true })
+vim.keymap.set("v", "<S-Tab>", "<gv", { silent = true })
 -- Inverse tab with Shift-Tab
 vim.keymap.set("i", "<S-Tab>", "<C-d>")
 

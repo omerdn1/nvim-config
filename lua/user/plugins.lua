@@ -74,6 +74,7 @@ require("packer").startup(function(use)
 		end,
 	})
 	-- UI
+	use("kyazdani42/nvim-web-devicons")
 	use({
 		"nvim-lualine/lualine.nvim",
 		requires = { "kyazdani42/nvim-web-devicons", opt = true },
@@ -102,6 +103,7 @@ require("packer").startup(function(use)
 
 	use("sainnhe/edge")
 	use("nvim-treesitter/nvim-treesitter")
+	use("nvim-treesitter/nvim-treesitter-context")
 	use("tpope/vim-commentary")
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -141,12 +143,6 @@ end)
 -- vim.g.edge_diagnostic_virtual_text = "colored"
 -- vim.cmd([[ colorscheme edge ]])
 
-require("bufferline").setup({
-	options = {
-		sort_by = "insert_after_current",
-	},
-})
-
 require("gitsigns").setup()
 
 require("telescope").setup({
@@ -178,4 +174,63 @@ require("nvim-treesitter.configs").setup({
 	highlight = { enable = true },
 	autotag = { enable = true },
 	rainbow = { enable = true, extended_mode = true },
+})
+
+require("treesitter-context").setup({
+	enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+	throttle = true, -- Throttles plugin updates (may improve performance)
+	max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+	-- show_all_context = show_all_context,
+	patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+		-- For all filetypes
+		-- Note that setting an entry here replaces all other patterns for this entry.
+		-- By setting the 'default' entry below, you can control which nodes you want to
+		-- appear in the context window.
+		default = {
+			"function",
+			"method",
+			"for",
+			"while",
+			"if",
+			"switch",
+			"case",
+		},
+
+		rust = {
+			"loop_expression",
+			"impl_item",
+			"type",
+			"macro",
+			"mod",
+		},
+
+		typescript = {
+			"class_declaration",
+			"abstract_class_declaration",
+			"else_clause",
+		},
+	},
+})
+
+vim.opt.mousemoveevent = true
+
+require("bufferline").setup({
+	options = {
+		-- persist_buffer_sort = false,
+		sort_by = "insert_after_current",
+		diagnostics = "nvim_lsp",
+		indicator = {
+			-- Only works well with Terminals that support nice underlines
+			style = "underline",
+		},
+		hover = {
+			enabled = true,
+			delay = 100,
+			reveal = { "close" },
+		},
+	},
+})
+
+require("toggleterm").setup({
+	open_mapping = [[<c-`>]],
 })

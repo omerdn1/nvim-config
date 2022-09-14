@@ -36,7 +36,16 @@ local options = {
 	scrolloff = 8, -- is one of my fav
 	sidescrolloff = 8,
 	guicursor = "a:blinkwait5-blinkon5-blinkoff5", -- Set blinking cursor
+	-- mousemoveevent = true,
 	-- guifont = "monospace:h17",               -- the font used in graphical neovim applications
+	-- FOLDING
+	-- foldcolumn = "1",
+	-- foldnestmax = 1,
+	-- foldlevel = 99, -- Using ufo provider need a large value, feel free to decrease the value
+	-- foldlevelstart = 99,
+	-- foldenable = true,
+	-- foldmethod = "manual",
+	-- fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]],
 }
 
 vim.opt.shortmess:append("c")

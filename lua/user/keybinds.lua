@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.keymap.set("n", "<Leader>w", "<C-w>k")
+-- vim.keymap.set("n", "<Leader><Leader>w", "<Cmd>WinShift<CR>")
 vim.keymap.set("n", "<Leader>a", "<C-w>h")
 vim.keymap.set("n", "<Leader>s", "<C-w>j")
 vim.keymap.set("n", "<Leader>d", "<C-w>l")
@@ -13,20 +14,29 @@ vim.keymap.set("n", "<Leader>k", ":BufferLineCyclePrev<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>j", ":BufferLineCycleNext<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>q", ":BufferLineCyclePrev<CR>:bdelete #<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>/", ":nohlsearch<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>y", ":%y<CR>")
 vim.keymap.set("n", "k", "gk", { silent = true })
 vim.keymap.set("n", "j", "gj", { silent = true })
-vim.keymap.set("t", "<Leader><Esc>", "<C-\\><C-n>", { silent = true })
 vim.keymap.set("n", "<Leader>v", ":edit ~/.config/nvim/init.lua<CR>", { silent = true })
+
+-- Format document
+vim.keymap.set("n", "<leader><Leader>f", "<cmd>lua vim.lsp.buf.format()<CR>")
+
 -- Clear search results with ESC
 vim.keymap.set("n", "<ESC>", ":noh<CR>", { silent = true })
+-- vim.keymap.set("n", "<ESC>", "<Esc>:nohlsearch<CR>", { silent = true })
+vim.cmd([[
+augroup no_highlight
+    autocmd TermResponse * nnoremap <esc> :noh<return><esc>
+augroup END
+]])
 
-vim.keymap.set("n", "<Leader>n", require("telescope").extensions.file_browser.file_browser)
+vim.keymap.set("n", "<Leader><Leader>p", require("telescope").extensions.file_browser.file_browser)
 vim.keymap.set("n", "<Leader>p", require("telescope.builtin").find_files)
 vim.keymap.set("n", "<Leader>t", require("telescope.builtin").treesitter)
 
 vim.keymap.set("n", "<C-w>", ":bd<CR>", { silent = true })
+vim.keymap.set("n", "<C-S-w>", ":BufOnly<CR>", { silent = true })
 
 vim.keymap.set("n", "<Leader>f", function(path)
 	require("telescope.builtin").live_grep({ search_dirs = { path or vim.fn.input("Dir: ", "./", "dir") } })
@@ -40,8 +50,21 @@ vim.keymap.set("i", "<S-Tab>", "<C-d>")
 
 vim.keymap.set({ "n", "v" }, "<Leader>c", ":Commentary<CR>", { silent = true })
 
+-- Escape terminal
+vim.keymap.set("t", "<esc>", [[<C-\><C-n>]])
+
 local Terminal = require("toggleterm.terminal").Terminal
-local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float" })
+local lazygit = Terminal:new({
+	cmd = "lazygit",
+	hidden = true,
+	direction = "float",
+	on_open = function()
+		vim.api.nvim_del_keymap("t", "<esc>")
+	end,
+	on_close = function()
+		vim.keymap.set("t", "<esc>", [[<C-\><C-n>]])
+	end,
+})
 
 function _lazygit_toggle()
 	lazygit:toggle()
@@ -102,19 +125,31 @@ local lang_maps = {
 }
 for lang, data in pairs(lang_maps) do
 	if data.test ~= nil then
-		vim.api.nvim_create_autocmd(
-			"FileType",
-			{ command = "nnoremap <Leader>t :split<CR>:terminal " .. data.test .. "<CR>", pattern = lang }
-		)
+		vim.api.nvim_create_autocmd("FileType", {
+			command = "nnoremap <Leader><Leader>t :99TermExec size="
+				.. vim.o.columns * 0.4
+				.. " direction='vertical' cmd='"
+				.. data.test
+				.. "'<CR>",
+			pattern = lang,
+		})
 	end
 	if data.build ~= nil then
-		vim.api.nvim_create_autocmd(
-			"FileType",
-			{ command = "nnoremap <Leader>b :!" .. data.build .. "<CR>", pattern = lang }
-		)
+		vim.api.nvim_create_autocmd("FileType", {
+			command = "nnoremap <Leader><Leader>b :99TermExec size="
+				.. vim.o.columns * 0.4
+				.. " direction='vertical' cmd='"
+				.. data.build
+				.. "'<CR>",
+			pattern = lang,
+		})
 	end
-	vim.api.nvim_create_autocmd(
-		"FileType",
-		{ command = "nnoremap <Leader>r :split<CR>:terminal " .. data.exec .. "<CR>", pattern = lang }
-	)
+	vim.api.nvim_create_autocmd("FileType", {
+		command = "nnoremap <Leader><Leader>r :99TermExec size="
+			.. vim.o.columns * 0.4
+			.. " direction='vertical' cmd='"
+			.. data.exec
+			.. "'<CR>",
+		pattern = lang,
+	})
 end

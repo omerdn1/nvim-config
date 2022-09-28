@@ -1,3 +1,6 @@
+-- Improve startup time
+require("impatient")
+
 require("user.plugins")
 require("user.lsp")
 require("user.options")

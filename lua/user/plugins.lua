@@ -53,11 +53,14 @@ require("packer").startup(function(use)
 	use("hrsh7th/vim-vsnip")
 	use("onsails/lspkind-nvim")
 	require("user/cmp_gh_source")
+	use("Exafunction/codeium.vim")
 	-- use({ "saadparwaiz1/cmp_luasnip" })
 	use({ "L3MON4D3/LuaSnip", tag = "v<CurrentMajor>.*" })
 	-- Vim Enhancements
 	use("vim-scripts/BufOnly.vim")
-	use("mg979/vim-visual-multi")
+	use({
+		"mg979/vim-visual-multi",
+	})
 	use({
 		"lukas-reineke/indent-blankline.nvim",
 		config = function()
@@ -119,6 +122,7 @@ require("packer").startup(function(use)
 		requires = "kyazdani42/nvim-web-devicons",
 	})
 	-- Window Management
+	-- use("mrjones2014/smart-splits.nvim")
 	use({
 		"anuvyklack/hydra.nvim",
 		requires = {
@@ -131,6 +135,7 @@ require("packer").startup(function(use)
 		config = function()
 			vim.o.winwidth = 10
 			vim.o.winminwidth = 10
+			vim.o.equalalways = false
 			require("winshift").setup()
 			require("windows").setup()
 			-- require("smart-splits").setup()
@@ -150,8 +155,16 @@ require("packer").startup(function(use)
 	-- })
 
 	use("simrat39/rust-tools.nvim")
+	use({ "akinsho/flutter-tools.nvim", requires = "nvim-lua/plenary.nvim" })
 
 	use("sainnhe/edge")
+	use({
+		"nvim-tree/nvim-tree.lua",
+		requires = {
+			"nvim-tree/nvim-web-devicons", -- optional, for file icons
+		},
+		tag = "nightly", -- optional, updated every week. (see issue #1193)
+	})
 	use("nvim-treesitter/nvim-treesitter")
 	use("nvim-treesitter/nvim-treesitter-context")
 	use("nvim-treesitter/nvim-treesitter-textobjects")
@@ -196,6 +209,9 @@ end)
 
 require("gitsigns").setup()
 
+-- empty setup using defaults
+require("nvim-tree").setup()
+
 require("telescope").setup({
 	defaults = {
 		mappings = { n = { ["o"] = require("telescope.actions").select_default } },
@@ -207,6 +223,7 @@ require("telescope").setup({
 	extensions = { file_browser = { depth = false, hidden = true } },
 })
 require("telescope").load_extension("file_browser")
+require("telescope").load_extension("flutter")
 
 require("nvim-treesitter.configs").setup({
 	ensure_installed = {

@@ -25,15 +25,17 @@ vim.keymap.set("n", "<leader><Leader>f", "<cmd>lua vim.lsp.buf.format()<CR>")
 -- Clear search results with ESC
 vim.keymap.set("n", "<ESC>", ":noh<CR>", { silent = true })
 -- vim.keymap.set("n", "<ESC>", "<Esc>:nohlsearch<CR>", { silent = true })
-vim.cmd([[
-augroup no_highlight
-    autocmd TermResponse * nnoremap <esc> :noh<return><esc>
-augroup END
-]])
+-- vim.cmd([[
+-- augroup no_highlight
+--     autocmd TermResponse * nnoremap <esc> :noh<return><esc>
+-- augroup END
+-- ]])
 
 vim.keymap.set("n", "<Leader><Leader>p", require("telescope").extensions.file_browser.file_browser)
+vim.keymap.set("n", "<Leader>o", require("telescope").extensions.flutter.commands)
 vim.keymap.set("n", "<Leader>p", require("telescope.builtin").find_files)
 vim.keymap.set("n", "<Leader>t", require("telescope.builtin").treesitter)
+vim.keymap.set("n", "<C-s>", ":NvimTreeToggle<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-w>", ":bd<CR>", { silent = true })
 vim.keymap.set("n", "<C-S-w>", ":BufOnly<CR>", { silent = true })

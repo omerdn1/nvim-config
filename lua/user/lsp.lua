@@ -6,12 +6,12 @@ local servers = {
 	"html",
 	"pyright",
 	-- "rust_analyzer", -- It's being initialized by rust-tools
-	"sumneko_lua",
+	"lua_ls",
 	-- "tailwindcss",
 	"tsserver",
 }
 
-local has_formatter = { "gopls", "rust_analyzer", "sumneko_lua" }
+local has_formatter = { "gopls", "lua_ls" }
 
 local on_attach = function(client, bufnr)
 	local should_format = true
@@ -113,7 +113,7 @@ local nvim_lsp = require("lspconfig")
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup({
 		on_attach = on_attach,
-		capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 	})
 end
@@ -123,6 +123,9 @@ require("rust-tools").setup({
 	server = { on_attach = on_attach },
 	tools = { inlay_hints = { show_variable_name = true } },
 })
+
+-- Flutter tools
+require("flutter-tools").setup({ lsp = { on_attach = on_attach } })
 
 vim.g.completeopt = "menu,menuone,noselect,noinsert"
 
@@ -181,12 +184,12 @@ cmp.setup({
 local null_ls = require("null-ls")
 null_ls.setup({
 	sources = {
-		null_ls.builtins.diagnostics.eslint_d,
+		-- null_ls.builtins.diagnostics.eslint_d,
 		null_ls.builtins.formatting.autopep8,
 		null_ls.builtins.formatting.eslint_d,
 		null_ls.builtins.formatting.gofmt,
 		null_ls.builtins.formatting.prettierd,
-		null_ls.builtins.formatting.rustfmt,
+		-- null_ls.builtins.formatting.rustfmt,
 		null_ls.builtins.formatting.stylua,
 	},
 })
